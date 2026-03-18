@@ -12,6 +12,13 @@ public class MappingProfile : Profile
         // Team mappings
         CreateMap<TeamRequestDTO, Team>();
         CreateMap<Team, TeamResponseDTO>();
+
+        // Player mappings
+        CreateMap<PlayerRequestDTO, Player>();
+        CreateMap<Player, PlayerResponseDTO>()
+        .ForMember( //Genera un relación con equipo (mapea automaticamente los campos requeridos de Team)
+        dest => dest.TeamName,
+        opt => opt.MapFrom(src => src.Team.Name));
     }
 
 }
