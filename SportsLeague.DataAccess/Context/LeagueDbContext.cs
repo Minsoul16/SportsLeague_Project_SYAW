@@ -12,7 +12,9 @@ public class LeagueDbContext : DbContext
 
     public DbSet<Team> Teams => Set<Team>();
     public DbSet<Player> Players => Set<Player>();
-
+    public DbSet<Referee> Referees => Set<Referee>();
+    public DbSet<Tournament> Tournaments => Set<Tournament>();
+    public DbSet<TournamentTeam> TournamentTeams => Set<TournamentTeam>();
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
