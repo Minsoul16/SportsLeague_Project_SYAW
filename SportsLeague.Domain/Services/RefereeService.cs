@@ -4,7 +4,6 @@ using SportsLeague.Domain.Interfaces.Repositories;
 using SportsLeague.Domain.Interfaces.Services;
 
 namespace SportsLeague.Domain.Services;
-
 public class RefereeService : IRefereeService
 {
     private readonly IRefereeRepository _refereeRepository;

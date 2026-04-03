@@ -12,4 +12,5 @@ public class Tournament : AuditBase
 
     // Navigation Properties
     public ICollection<TournamentTeam> TournamentTeams { get; set; } = new List<TournamentTeam>(); //Parte de la Máquina de estados
+    public ICollection<TournamentSponsor> TournamentSponsors { get; set; } = new List<TournamentSponsor>();
 }
