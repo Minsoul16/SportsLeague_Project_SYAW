@@ -71,7 +71,7 @@ public class TournamentController : ControllerBase
         catch (InvalidOperationException ex) { return Conflict(new { message = ex.Message }); }
     }
     [HttpPatch("{id}/status")] //Actualiza una parte del objeto
-    public async Task<ActionResult> UpdateStatus(int id, UpdateStatusDTO dto)
+    public async Task<ActionResult> UpdateStatus(int id, UpdateTournamentStatusDTO dto)
     {
         try
         {
