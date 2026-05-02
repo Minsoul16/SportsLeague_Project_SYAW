@@ -14,4 +14,7 @@ public class Player : AuditBase
 
     // Navigation Property
     public Teams Team { get; set; } = null!; //Simbolo de nuleabilidad
+
+    public ICollection<Goal> Goals { get; set; } = new List<Goal>();
+    public ICollection<Card> Cards { get; set; } = new List<Card>();
 }
