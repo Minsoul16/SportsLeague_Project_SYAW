@@ -23,6 +23,7 @@ public class LeagueDbContext : DbContext
     public DbSet<MatchResult> MatchResults => Set<MatchResult>();
     public DbSet<Goal> Goals => Set<Goal>();
     public DbSet<Card> Cards => Set<Card>();
+    public DbSet<MatchLineup> MatchLineups => Set<MatchLineup>();
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
@@ -309,6 +310,28 @@ public class LeagueDbContext : DbContext
                   .WithMany(p => p.Cards)
                   .HasForeignKey(c => c.PlayerId)
                   .OnDelete(DeleteBehavior.Restrict);
+        });
+
+        // --- MatchLineup configuration ---
+        modelBuilder.Entity<MatchLineup>(entity =>
+        {
+            entity.HasKey(ml => ml.Id);
+            entity.Property(ml => ml.IsStarter).IsRequired();
+            entity.Property(ml => ml.Position).IsRequired();
+            entity.Property(ml => ml.CreatedAt).IsRequired();
+            entity.Property(ml => ml.UpdatedAt).IsRequired(false);
+
+            entity.HasOne(m => m.Match)
+                .WithMany(ml => ml.MatchLineups)
+                .HasForeignKey(ml => ml.MatchId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasOne(p => p.Player)
+                .WithOne(ml => ml.MatchLineup)
+                .HasForeignKey<MatchLineup>(ml => ml.PlayerId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasIndex(ml => ml.PlayerId).IsUnique();
         });
     }
 
