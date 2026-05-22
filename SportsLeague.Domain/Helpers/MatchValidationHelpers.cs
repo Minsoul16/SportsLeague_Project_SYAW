@@ -8,14 +8,17 @@ public class MatchValidationHelper
 {
     private readonly IMatchRepository _matchRepository;
     private readonly IPlayerRepository _playerRepository;
+    private readonly IMatchLineupRepository _matchLineupRepository;
 
 
     public MatchValidationHelper(
         IMatchRepository matchRepository,
-        IPlayerRepository playerRepository)
+        IPlayerRepository playerRepository,
+        IMatchLineupRepository matchLineupRepository)
     {
         _matchRepository = matchRepository;
         _playerRepository = playerRepository;
+        _matchLineupRepository = matchLineupRepository;
     }
 
 
@@ -61,5 +64,32 @@ public class MatchValidationHelper
         if (minute < 1 || minute > 120)
             throw new InvalidOperationException(
                 "El minuto debe estar entre 1 y 120");
+    }
+
+    public async Task ValidateMatchLineupForPlayer(int playerId,int matchId)
+    {
+        var match = await ValidateMatchForEventAsync(matchId);
+
+        var player = await ValidatePlayerInMatchAsync(playerId, match);
+
+        var matchLineup = await _matchLineupRepository
+            .ExistsMatchLineupAsync(matchId, playerId);
+
+        if (matchLineup != null)
+        {
+            throw new KeyNotFoundException(
+                "El jugador ya está registrado en la alineación de este partido");
+        }
+
+        int starters = await _matchLineupRepository
+            .CountStartersByMatchAndTeamAsync(
+                matchId,
+                player.TeamId);
+
+        if (starters >= 11)
+        {
+            throw new InvalidOperationException(
+                "El equipo ya tiene 11 titulares registrados en este partido");
+        }
     }
 }

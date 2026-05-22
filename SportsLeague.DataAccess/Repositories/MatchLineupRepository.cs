@@ -26,4 +26,20 @@ public class MatchLineupRepository : GenericRepository<MatchLineup>, IMatchLineu
             .Where(ml => ml.Player.TeamId == teamId)
             .ToListAsync();
     }
+
+    public async Task<MatchLineup?> ExistsMatchLineupAsync(int matchId, int playerId)
+    {
+        return await _dbSet
+            .FirstOrDefaultAsync(ml => ml.MatchId == matchId && ml.PlayerId == playerId);
+    }
+
+    public async Task<int> CountStartersByMatchAndTeamAsync(int matchId,int teamId)
+    {
+        return await _dbSet
+            .Include(ml => ml.Player)
+            .CountAsync(ml =>
+                ml.MatchId == matchId &&
+                ml.IsStarter &&
+                ml.Player.TeamId == teamId);
+    }
 }
