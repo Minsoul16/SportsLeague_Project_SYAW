@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using SportsLeague.API.DTOs.Request;
 using SportsLeague.API.DTOs.Response;
@@ -31,7 +32,7 @@ public class MatchLineupController : ControllerBase
             var matchLineup = _mapper.Map<MatchLineup>(dto);
             matchLineup.MatchId = matchId;
             var newMatchLineup = await _matchLineupService.CreateAsync(matchLineup);
-            return Ok(_mapper.Map<MatchLineupResponseDTO>(newMatchLineup));
+            return CreatedAtAction(nameof(GetByMatch),new { matchId },_mapper.Map<MatchLineupResponseDTO>(newMatchLineup));
         }
         catch (KeyNotFoundException ex) { return NotFound(new { message = ex.Message }); }
         catch (InvalidOperationException ex) { return Conflict(new { message = ex.Message }); }

@@ -14,6 +14,8 @@ public class MatchLineupRepository : GenericRepository<MatchLineup>, IMatchLineu
     public async Task<IEnumerable<MatchLineup>> GetByMatchAsync(int matchId)
     {
         return await _dbSet
+            .Include(ml => ml.Player)
+            .ThenInclude(p => p.Team)
             .Where(ml => ml.MatchId == matchId)
             .ToListAsync();
     }
@@ -22,6 +24,7 @@ public class MatchLineupRepository : GenericRepository<MatchLineup>, IMatchLineu
     {
         return await _dbSet
             .Include(ml => ml.Player)
+            .ThenInclude(p => p.Team)
             .Where(ml => ml.Player.TeamId == teamId && ml.MatchId == matchId)
             .ToListAsync();
     }

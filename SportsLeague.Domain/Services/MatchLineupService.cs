@@ -72,9 +72,9 @@ public class MatchLineupService :IMatchLineupService
 
     public async Task<MatchLineup> CreateAsync(MatchLineup matchLineup)
     {
-        var match = await _validationHelper.ValidateMatchForEventAsync(matchLineup.MatchId);
+        var match = await _validationHelper.ValidateMatchIsScheduledAsync(matchLineup.MatchId);
         await _validationHelper.ValidatePlayerInMatchAsync(matchLineup.PlayerId, match);
-        await _validationHelper.ValidateMatchLineupForPlayerAsync(matchLineup.PlayerId, matchLineup.MatchId);
+        await _validationHelper.ValidateMatchLineupForPlayerAsync(matchLineup.PlayerId, matchLineup.MatchId, matchLineup.IsStarter);
 
         _logger.LogInformation(
             "Registering MatchLineup: Match {MatchId}, Player {PlayerId}",

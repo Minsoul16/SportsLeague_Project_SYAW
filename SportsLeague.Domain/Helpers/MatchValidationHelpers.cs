@@ -39,6 +39,21 @@ public class MatchValidationHelper
         return match;
     }
 
+    public async Task<Match> ValidateMatchIsScheduledAsync(int matchId)
+    {
+        var match = await _matchRepository.GetByIdAsync(matchId);
+        if (match == null)
+            throw new KeyNotFoundException(
+                $"No se encontró el partido con ID {matchId}");
+
+
+        if (match.Status != MatchStatus.Scheduled)
+            throw new InvalidOperationException(
+                "Solo se pueden registrar eventos en partidos Scheduled");
+
+
+        return match;
+    }
 
     public async Task<Player> ValidatePlayerInMatchAsync(
         int playerId, Match match)
@@ -66,9 +81,9 @@ public class MatchValidationHelper
                 "El minuto debe estar entre 1 y 120");
     }
 
-    public async Task ValidateMatchLineupForPlayerAsync(int playerId,int matchId)
+    public async Task ValidateMatchLineupForPlayerAsync(int playerId, int matchId, bool isStarter)
     {
-        var match = await ValidateMatchForEventAsync(matchId);
+        var match = await ValidateMatchIsScheduledAsync(matchId);
 
         var player = await ValidatePlayerInMatchAsync(playerId, match);
 
@@ -77,19 +92,20 @@ public class MatchValidationHelper
 
         if (matchLineup != null)
         {
-            throw new KeyNotFoundException(
+            throw new InvalidOperationException(
                 "El jugador ya está registrado en la alineación de este partido");
         }
 
-        int starters = await _matchLineupRepository
-            .CountStartersByMatchAndTeamAsync(
-                matchId,
-                player.TeamId);
-
-        if (starters >= 11)
+        if (isStarter)
         {
-            throw new InvalidOperationException(
-                "El equipo ya tiene 11 titulares registrados en este partido");
+            var starters = await _matchLineupRepository
+                .CountStartersByMatchAndTeamAsync(matchId, player.TeamId);
+
+            if (starters >= 11)
+            {
+                throw new InvalidOperationException(
+                    "El equipo ya tiene 11 titulares registrados en este partido");
+            }
         }
     }
 }
