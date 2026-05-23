@@ -327,11 +327,12 @@ public class LeagueDbContext : DbContext
                 .OnDelete(DeleteBehavior.Cascade);
 
             entity.HasOne(p => p.Player)
-                .WithOne(ml => ml.MatchLineup)
-                .HasForeignKey<MatchLineup>(ml => ml.PlayerId)
+                .WithMany(ml => ml.MatchLineups)
+                .HasForeignKey(ml => ml.PlayerId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            entity.HasIndex(ml => ml.PlayerId).IsUnique();
+
+            entity.HasIndex(ml => new {ml.MatchId, ml.PlayerId}).IsUnique();
         });
     }
 

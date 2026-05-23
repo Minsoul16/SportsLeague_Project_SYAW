@@ -66,7 +66,7 @@ public class MatchValidationHelper
                 "El minuto debe estar entre 1 y 120");
     }
 
-    public async Task ValidateMatchLineupForPlayer(int playerId,int matchId)
+    public async Task ValidateMatchLineupForPlayerAsync(int playerId,int matchId)
     {
         var match = await ValidateMatchForEventAsync(matchId);
 
