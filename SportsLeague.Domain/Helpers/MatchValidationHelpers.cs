@@ -39,7 +39,7 @@ public class MatchValidationHelper
         return match;
     }
 
-    public async Task<Match> ValidateMatchIsScheduledAsync(int matchId)
+    public async Task<Match> ValidateMatchIsScheduledAsync(int matchId)//
     {
         var match = await _matchRepository.GetByIdAsync(matchId);
         if (match == null)
@@ -55,7 +55,7 @@ public class MatchValidationHelper
         return match;
     }
 
-    public async Task<Player> ValidatePlayerInMatchAsync(
+    public async Task<Player> ValidatePlayerInMatchAsync( //
         int playerId, Match match)
     {
         var player = await _playerRepository.GetByIdAsync(playerId);
@@ -81,7 +81,7 @@ public class MatchValidationHelper
                 "El minuto debe estar entre 1 y 120");
     }
 
-    public async Task ValidateMatchLineupForPlayerAsync(int playerId, int matchId, bool isStarter)
+    public async Task ValidateMatchLineupForPlayerAsync(int playerId, int matchId, bool isStarter) //
     {
         var match = await ValidateMatchIsScheduledAsync(matchId);
 
